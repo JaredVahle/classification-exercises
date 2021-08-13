@@ -1,43 +1,96 @@
-# where im going to put my finished functions.
-import env
-import os
+
 import pandas as pd
 import numpy as np
+import os
+from env import host, user, password
 
+###################### Acquire Titanic Data ######################
 
-def get_connection(db, user=env.user, host=env.host, password=env.password):
+def get_connection(db, user=user, host=host, password=password):
+    '''
+    This function uses my info from my env file to
+    create a connection url to access the Codeup db.
+    It takes in a string name of a database as an argument.
+    '''
     return f'mysql+pymysql://{user}:{password}@{host}/{db}'
+    
+    
+    
+def new_titanic_data():
+    '''
+    This function reads the titanic data from the Codeup db into a df,
+    write it to a csv file, and returns the df.
+    '''
+    # Create SQL query.
+    sql_query = 'SELECT * FROM passengers'
+    
+    # Read in DataFrame from Codeup db.
+    df = pd.read_sql(sql_query, get_connection('titanic_db'))
+    
+    return df
+
+
 
 def get_titanic_data():
-    filename = "titanic.csv"
-
-    if os.path.isfile("titanic.csv"):
-        return pd.read_csv("titanic.csv")
+    '''
+    This function reads in titanic data from Codeup database, writes data to
+    a csv file if a local file does not exist, and returns a df.
+    '''
+    if os.path.isfile('titanic_df.csv'):
+        
+        # If csv file exists, read in data from csv file.
+        df = pd.read_csv('titanic_df.csv', index_col=0)
+        
     else:
-        # read the SQL query into a dataframe
-        df = pd.read_sql('SELECT * FROM passengers', get_connection('titanic_db'))
+        
+        # Read fresh data from db into a DataFrame.
+        df = new_titanic_data()
+        
+        # Write DataFrame to a csv file.
+        df.to_csv('titanic_df.csv')
+        
+    return df
 
-        # Write that dataframe to disk for later. Called "caching" the data for later.
-        df.to_csv("titanic.csv")
+###################### Acquire Iris Data ######################
 
-        # Return the dataframe to the calling code
-        return df 
+def new_iris_data():
+    '''
+    This function reads the iris data from the Codeup db into a df.
+    '''
+    sql_query = """
+                SELECT 
+                    species_id,
+                    species_name,
+                    sepal_length,
+                    sepal_width,
+                    petal_length,
+                    petal_width
+                FROM measurements
+                JOIN species USING(species_id)
+                """
+    
+    # Read in DataFrame from Codeup db.
+    df = pd.read_sql(sql_query, get_connection('iris_db'))
+    
+    return df
+
 
 def get_iris_data():
-    filename = "iris_db.csv"
-
-    if os.path.isfile("iris_db.csv"):
-        return pd.read_csv("iris_db.csv")
+    '''
+    This function reads in iris data from Codeup database, writes data to
+    a csv file if a local file does not exist, and returns a df.
+    '''
+    if os.path.isfile('iris_df.csv'):
+        
+        # If csv file exists read in data from csv file.
+        df = pd.read_csv('iris_df.csv', index_col=0)
+        
     else:
-        # read the SQL query into a dataframe
-        df = pd.read_sql('''
-SELECT *
-FROM species
-JOIN measurements ON measurements.species_id = species.species_id;
-''', get_connection('iris_db'))
-
-        # Write that dataframe to disk for later. Called "caching" the data for later.
-        df.to_csv("iris_db.csv")
-
-        # Return the dataframe to the calling code
-        return df
+        
+        # Read fresh data from db into a DataFrame
+        df = new_iris_data()
+        
+        # Cache data
+        df.to_csv('iris_df.csv')
+        
+    return df
