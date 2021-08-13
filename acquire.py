@@ -1,7 +1,8 @@
 # where im going to put my finished functions.
-import env
+import env import host, user, password
 import os
 import pandas as pd
+import numpy as np
 
 
 def get_connection(db, user=env.user, host=env.host, password=env.password):
