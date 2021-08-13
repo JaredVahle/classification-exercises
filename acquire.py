@@ -1,5 +1,5 @@
 # where im going to put my finished functions.
-import env import host, user, password
+import env
 import os
 import pandas as pd
 import numpy as np
