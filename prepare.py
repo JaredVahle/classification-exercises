@@ -73,7 +73,7 @@ def prep_iris_data(df):
     """
     takes in a data from iris database, cleans the data, splits the data
     in train validate test. 
-    Returns three dataframes train, validate and test.
+    Returns three dataframes train, validate and test.   
     """
     df = clean_iris(df)
     train, validate, test = split_iris_data(df)
