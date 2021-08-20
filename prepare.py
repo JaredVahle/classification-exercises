@@ -19,7 +19,7 @@ def clean_data(df):
     and create dummy vars of sex and embark_town. 
     '''
     df.drop_duplicates(inplace=True)
-    df.drop(columns=['deck', 'embarked', 'class', 'age'], inplace=True)
+    df.drop(columns=['deck', 'embarked', 'class'], inplace=True)
     df.embark_town.fillna(value='Southampton', inplace=True)
     dummy_df = pd.get_dummies(df[['sex', 'embark_town']], drop_first=True)
     return pd.concat([df, dummy_df], axis=1)
