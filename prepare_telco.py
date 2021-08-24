@@ -1,3 +1,5 @@
+import pandas as pd
+
 def clean_telco(df):
     df.total_charges.replace(to_replace = {" ":"0"}, inplace = True)
     df.total_charges = df.total_charges.astype("float")
