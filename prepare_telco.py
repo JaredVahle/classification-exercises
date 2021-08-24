@@ -33,4 +33,13 @@ def clean_telco(df):
                    "payment_type_id.1",
                    "Unnamed: 0"],inplace = True)
     return pd.concat([df, dummy_df], axis=1)
+
+def split_telco_data(df):
+    """
+    splits the data in train validate and test 
+    """
+    train, test = train_test_split(df, test_size = 0.2, random_state = 123, stratify = df.survived)
+    train, validate = train_test_split(train, test_size=.25, random_state=123, stratify=train.survived)
+    
+    return train, validate, test
     
