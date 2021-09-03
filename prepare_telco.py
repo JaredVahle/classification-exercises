@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def clean_telco(df):
     df.total_charges.replace(to_replace = {" ":"0"}, inplace = True)
